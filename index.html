@@ -24,8 +24,6 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font); color: var(--text-primary); background: transparent; padding: 1rem 0; margin: 0; }
-  h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
-  .page-sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; }
   .section-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
   .network-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
   .net-btn { font-size: 13px; padding: 6px 14px; border-radius: var(--radius-md); border: 0.5px solid var(--border); background: var(--bg-primary); color: var(--text-primary); cursor: pointer; transition: all 0.15s; font-family: var(--font); }
@@ -53,22 +51,16 @@
   .feature-row-stacked .badge { margin-top: 2px; }
   .impact-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--radius-md); background: #FBEAF0; color: #993556; margin-left: 8px; }
 
-  .footer { margin-top: 32px; padding-top: 16px; border-top: 0.5px solid var(--border); font-size: 12px; color: var(--text-tertiary); line-height: 1.5; }
+
 </style>
 </head>
 <body>
-
-<h1>Beeper nutritional labels</h1>
-<p class="page-sub">Feature support by chat network — what users get and what they won't.</p>
 
 <p class="section-label">Select a network</p>
 <div class="network-grid" id="netGrid"></div>
 
 <div id="labelOutput"></div>
 
-<div class="footer">
-  Source: <a href="https://help.beeper.com/en_US/quick-references/beeper-chat-support-matrix" style="color:var(--text-secondary);">Beeper Chat Support Matrix</a> — Last updated April 2026
-</div>
 
 <script>
 const networks = ['WhatsApp','FB Messenger','Instagram','Telegram','Signal','Google Messages','Google Chat','Twitter/X','Slack','Discord','LinkedIn'];
