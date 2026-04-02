@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beeper — Chat Network Support Matrix</title>
+<meta name="description" content="See what features Beeper supports for each chat network. Interactive support matrix with per-network nutritional labels.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
+<style>
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f7f7f5;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b6b6b;
+    --text-tertiary: #999999;
+    --border: rgba(0,0,0,0.1);
+    --border-hover: rgba(0,0,0,0.2);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-primary: #1e1e1e;
+      --bg-secondary: #2a2a2a;
+      --text-primary: #e8e8e8;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #707070;
+      --border: rgba(255,255,255,0.1);
+      --border-hover: rgba(255,255,255,0.2);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); color: var(--text-primary); background: var(--bg-secondary); padding: 2rem 1rem; max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+  .page-sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; }
+  .section-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .network-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
+  .net-btn { font-size: 13px; padding: 6px 14px; border-radius: var(--radius-md); border: 0.5px solid var(--border); background: var(--bg-primary); color: var(--text-primary); cursor: pointer; transition: all 0.15s; font-family: var(--font); }
+  .net-btn:hover { border-color: var(--border-hover); background: var(--bg-secondary); }
+  .net-btn.active { border-color: #534AB7; background: #EEEDFE; color: #3C3489; }
+  @media (prefers-color-scheme: dark) { .net-btn.active { background: #3C3489; color: #CECBF6; border-color: #534AB7; } }
+  .label-card { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 16px; }
+  .label-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--text-primary); }
+  .label-header h2 { font-size: 18px; font-weight: 500; }
+  .feature-row { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; }
+  .feature-row:last-child { border-bottom: none; }
+  .feature-name { flex: 1; }
+  .badge { font-size: 11px; padding: 2px 10px; border-radius: var(--radius-md); font-weight: 500; white-space: nowrap; }
+  .badge-yes { background: #EAF3DE; color: #3B6D11; }
+  .badge-no { background: #FAC775; color: #633806; }
+  .badge-partial { background: #FAEEDA; color: #854F0B; }
+  .badge-oneway { background: #E6F1FB; color: #185FA5; }
+  .badge-na { background: var(--bg-secondary); color: var(--text-tertiary); }
+  @media (prefers-color-scheme: dark) {
+    .badge-yes { background: #27500A; color: #C0DD97; }
+    .badge-no { background: #854F0B; color: #FAEEDA; }
+    .badge-partial { background: #633806; color: #FAC775; }
+    .badge-oneway { background: #0C447C; color: #B5D4F4; }
+  }
+  .callout { font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .feature-detail { font-size: 12px; color: var(--text-secondary); margin-top: 2px; line-height: 1.4; }
+  .feature-row-stacked { display: flex; align-items: flex-start; justify-content: space-between; padding: 8px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; }
+  .feature-row-stacked:last-child { border-bottom: none; }
+  .feature-row-stacked .badge { margin-top: 2px; }
+  .impact-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--radius-md); background: #FBEAF0; color: #993556; margin-left: 8px; }
+  @media (prefers-color-scheme: dark) { .impact-tag { background: #72243E; color: #F4C0D1; } }
+  .footer { margin-top: 32px; padding-top: 16px; border-top: 0.5px solid var(--border); font-size: 12px; color: var(--text-tertiary); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<h1>Beeper nutritional labels</h1>
+<p class="page-sub">Feature support by chat network — what users get and what they won't.</p>
+
+<p class="section-label">Select a network</p>
+<div class="network-grid" id="netGrid"></div>
+
+<div id="labelOutput"></div>
+
+<div class="footer">
+  Source: <a href="https://help.beeper.com/en_US/quick-references/beeper-chat-support-matrix" style="color:var(--text-secondary);">Beeper Chat Support Matrix</a> — Last updated April 2026
+</div>
+
+<script>
+const networks = ['WhatsApp','FB Messenger','Instagram','Telegram','Signal','Google Messages','Google Chat','Twitter/X','Slack','Discord','LinkedIn'];
+
+const matrix = {
+  'Import Historical Messages': {WhatsApp:'yes',FBMessenger:'partial',Instagram:'partial',Telegram:'yes',Signal:'yes',GoogleMessages:'partial',GoogleChat:'no','Twitter/X':'yes',Slack:'yes',Discord:'partial',LinkedIn:'no'},
+  'Create New Chat': {WhatsApp:'yes',FBMessenger:'no',Instagram:'no',Telegram:'yes',Signal:'yes',GoogleMessages:'yes',GoogleChat:'no','Twitter/X':'no',Slack:'no',Discord:'no',LinkedIn:'no'},
+  'Message Redactions': {WhatsApp:'yes',FBMessenger:'yes',Instagram:'yes',Telegram:'yes',Signal:'yes',GoogleMessages:'oneway-in',GoogleChat:'yes','Twitter/X':'na',Slack:'oneway-in',Discord:'yes',LinkedIn:'yes'},
+  'Message Edits': {WhatsApp:'yes',FBMessenger:'na',Instagram:'no',Telegram:'yes',Signal:'yes',GoogleMessages:'no',GoogleChat:'na','Twitter/X':'yes',Slack:'yes',Discord:'yes',LinkedIn:'oneway-in'},
+  'Read Receipts': {WhatsApp:'yes',FBMessenger:'yes',Instagram:'yes',Telegram:'yes',Signal:'yes',GoogleMessages:'yes',GoogleChat:'yes','Twitter/X':'no',Slack:'yes',Discord:'na',LinkedIn:'na'},
+  'Emoji Reactions': {WhatsApp:'yes',FBMessenger:'yes',Instagram:'yes',Telegram:'yes',Signal:'yes',GoogleMessages:'yes',GoogleChat:'yes','Twitter/X':'yes',Slack:'yes',Discord:'yes',LinkedIn:'oneway-out'},
+  'File Attachments': {WhatsApp:'yes',FBMessenger:'yes',Instagram:'na',Telegram:'yes',Signal:'yes',GoogleMessages:'yes',GoogleChat:'yes','Twitter/X':'na',Slack:'yes',Discord:'yes',LinkedIn:'yes'},
+  'Typing Notifications': {WhatsApp:'no',FBMessenger:'yes',Instagram:'no',Telegram:'yes',Signal:'yes',GoogleMessages:'oneway-in',GoogleChat:'oneway-out','Twitter/X':'na',Slack:'yes',Discord:'no',LinkedIn:'na'},
+  'Captioned Media': {WhatsApp:'yes',FBMessenger:'no',Instagram:'na',Telegram:'yes',Signal:'yes',GoogleMessages:'no',GoogleChat:'no','Twitter/X':'na',Slack:'yes',Discord:'oneway-in',LinkedIn:'na'},
+  'Voice Messages': {WhatsApp:'yes',FBMessenger:'yes',Instagram:'yes',Telegram:'yes',Signal:'yes',GoogleMessages:'yes',GoogleChat:'na','Twitter/X':'no',Slack:'partial',Discord:'oneway-in',LinkedIn:'oneway-in'},
+  'Disappearing Messages': {WhatsApp:'yes',FBMessenger:'na',Instagram:'na',Telegram:'yes',Signal:'yes',GoogleMessages:'na',GoogleChat:'na','Twitter/X':'na',Slack:'na',Discord:'na',LinkedIn:'na'},
+  'Replies': {WhatsApp:'yes',FBMessenger:'yes',Instagram:'yes',Telegram:'yes',Signal:'yes',GoogleMessages:'yes',GoogleChat:'na','Twitter/X':'yes',Slack:'yes',Discord:'yes',LinkedIn:'na'},
+  'Text Formatting': {WhatsApp:'yes',FBMessenger:'yes',Instagram:'na',Telegram:'yes',Signal:'yes',GoogleMessages:'na',GoogleChat:'yes','Twitter/X':'na',Slack:'yes',Discord:'na',LinkedIn:'na'},
+  'Threads': {WhatsApp:'na',FBMessenger:'na',Instagram:'na',Telegram:'na',Signal:'na',GoogleMessages:'no',GoogleChat:'partial','Twitter/X':'no',Slack:'no',Discord:'na',LinkedIn:'na'},
+  'Polls': {WhatsApp:'no',FBMessenger:'no',Instagram:'no',Telegram:'no',Signal:'no',GoogleMessages:'no',GoogleChat:'no','Twitter/X':'no',Slack:'no',Discord:'no',LinkedIn:'no'},
+  'Online Status': {WhatsApp:'no',FBMessenger:'no',Instagram:'no',Telegram:'no',Signal:'no',GoogleMessages:'no',GoogleChat:'no','Twitter/X':'no',Slack:'no',Discord:'no',LinkedIn:'no'},
+};
+
+const highImpactByNetwork = {
+  WhatsApp: ['Typing Notifications','Polls'],
+  FBMessenger: ['Create New Chat','Captioned Media','Typing Notifications'],
+  Instagram: ['Create New Chat','Message Edits','Typing Notifications'],
+  Telegram: [],
+  Signal: [],
+  GoogleMessages: ['Message Edits','Captioned Media','Typing Notifications','Text Formatting'],
+  GoogleChat: ['Create New Chat','Replies','Voice Messages'],
+  'Twitter/X': ['Create New Chat','Read Receipts','File Attachments','Voice Messages'],
+  Slack: ['Create New Chat','Threads'],
+  Discord: ['Create New Chat','Typing Notifications','Read Receipts'],
+  LinkedIn: ['Create New Chat','Message Edits','Typing Notifications'],
+};
+
+const nk = n => n.replace(/[\s\/]/g,'');
+
+const historyDetails = {
+  WhatsApp: '1 year for all chats, sometimes up to 3 years',
+  FBMessenger: '20 most recent chats, 100 messages each. No E2EE chats. Others import as new messages arrive.',
+  Instagram: '20 most recent chats, 100 messages each. No E2EE chats. Others import as new messages arrive.',
+  Telegram: 'All DMs and minigroups. 1,000 messages in supergroups, 100 in channels. No chats with 10K+ members.',
+  Signal: 'All history. Must select "import all history" during device linking.',
+  GoogleMessages: '25 most recent chats, 50 messages each',
+  GoogleChat: '1 message per chat only',
+  'Twitter/X': 'On-device bridge: 20 most recent chats. Cloud bridge: all history.',
+  Slack: 'All DM history. 1,000 messages per channel.',
+  Discord: '5 most recent DMs, 50 messages each. No channel history.',
+  LinkedIn: '1 message per chat only',
+};
+
+function badgeHTML(status) {
+  const map = {
+    yes: ['Supported','badge-yes'],
+    no: ['Not supported','badge-no'],
+    partial: ['Partial','badge-partial'],
+    'oneway-in': ['Network \u2192 Beeper only','badge-oneway'],
+    'oneway-out': ['Beeper \u2192 Network only','badge-oneway'],
+    na: ['N/A','badge-na'],
+  };
+  const [label, cls] = map[status] || ['Unknown','badge-na'];
+  return '<span class="badge ' + cls + '">' + label + '</span>';
+}
+
+const baseline = ['Emoji Reactions','Read Receipts','Replies','File Attachments','Voice Messages','Import Historical Messages','Message Redactions'];
+const neverWorks = ['Online Status','Polls','Threads'];
+const networkSpecific = ['Create New Chat','Message Edits','Typing Notifications','Captioned Media','Text Formatting','Disappearing Messages'];
+
+function render(net) {
+  const key = nk(net);
+  const hi = highImpactByNetwork[key] || [];
+
+  let supportedCount = 0;
+  let totalRelevant = 0;
+  Object.entries(matrix).forEach(function(entry) {
+    const v = entry[1][key];
+    if (v && v !== 'na') {
+      totalRelevant++;
+      if (v === 'yes') supportedCount++;
+      else if (v === 'partial' || v === 'oneway-in' || v === 'oneway-out') supportedCount += 0.5;
+    }
+  });
+  const score = totalRelevant > 0 ? Math.round((supportedCount / totalRelevant) * 100) : 0;
+
+  let html = '<div class="label-card">';
+  html += '<div class="label-header"><h2>' + net + ' on Beeper</h2>';
+  html += '<span style="margin-left:auto;font-size:14px;color:var(--text-secondary);">' + score + '% coverage</span></div>';
+  html += '<p class="section-label" style="margin-top:4px;">Baseline \u2014 works on almost every network</p>';
+
+  baseline.forEach(function(feat) {
+    const v = matrix[feat] ? matrix[feat][key] : null;
+    if (!v) return;
+    if (feat === 'Import Historical Messages' && historyDetails[key]) {
+      html += '<div class="feature-row-stacked"><div class="feature-name">' + feat + '<div class="feature-detail">' + historyDetails[key] + '</div></div>' + badgeHTML(v) + '</div>';
+    } else {
+      html += '<div class="feature-row"><span class="feature-name">' + feat + '</span>' + badgeHTML(v) + '</div>';
+    }
+  });
+
+  html += '<div class="divider"></div><p class="section-label">Network-specific features</p>';
+  networkSpecific.forEach(function(feat) {
+    const v = matrix[feat] ? matrix[feat][key] : null;
+    if (!v) return;
+    const isHigh = hi.indexOf(feat) !== -1 && (v === 'no' || v === 'oneway-in' || v === 'oneway-out');
+    html += '<div class="feature-row"><span class="feature-name">' + feat + (isHigh ? '<span class="impact-tag">high impact gap</span>' : '') + '</span>' + badgeHTML(v) + '</div>';
+  });
+
+  html += '<div class="divider"></div><p class="section-label">Never supported on any network</p>';
+  neverWorks.forEach(function(feat) {
+    html += '<div class="feature-row"><span class="feature-name">' + feat + '</span>' + badgeHTML('no') + '</div>';
+  });
+
+  html += '</div>';
+
+  var gaps = hi.filter(function(f) { var v = matrix[f] ? matrix[f][key] : null; return v === 'no' || v === 'oneway-in' || v === 'oneway-out'; });
+  if (gaps.length > 0) {
+    html += '<p class="callout">Features tagged <span class="impact-tag">high impact gap</span> are things users likely expect from ' + net + ' natively but won\'t get through Beeper. These are candidates for the "heads up" section of the onboarding label.</p>';
+  } else {
+    html += '<p class="callout">' + net + ' has excellent coverage on Beeper \u2014 no major expectation gaps to flag during onboarding.</p>';
+  }
+
+  document.getElementById('labelOutput').innerHTML = html;
+}
+
+var grid = document.getElementById('netGrid');
+networks.forEach(function(n, i) {
+  var btn = document.createElement('button');
+  btn.className = 'net-btn' + (i === 0 ? ' active' : '');
+  btn.textContent = n;
+  btn.onclick = function() {
+    var btns = grid.querySelectorAll('.net-btn');
+    for (var j = 0; j < btns.length; j++) btns[j].classList.remove('active');
+    btn.classList.add('active');
+    render(nk(n));
+  };
+  grid.appendChild(btn);
+});
+
+render('WhatsApp');
+</script>
+</body>
+</html>
