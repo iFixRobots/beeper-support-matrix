@@ -202,6 +202,15 @@ networks.forEach(function(n, i) {
 });
 
 render('WhatsApp');
+
+function notifyHeight() {
+  var h = document.body.scrollHeight;
+  window.parent.postMessage({ type: 'resize', height: h }, '*');
+}
+var observer = new MutationObserver(notifyHeight);
+observer.observe(document.getElementById('labelOutput'), { childList: true, subtree: true });
+window.addEventListener('load', notifyHeight);
+window.addEventListener('resize', notifyHeight);
 </script>
 </body>
 </html>
