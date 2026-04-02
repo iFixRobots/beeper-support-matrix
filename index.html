@@ -167,7 +167,7 @@ function render(net) {
     const v = matrix[feat] ? matrix[feat][key] : null;
     if (!v) return;
     const isHigh = hi.indexOf(feat) !== -1 && (v === 'no' || v === 'oneway-in' || v === 'oneway-out');
-    html += '<div class="feature-row"><span class="feature-name">' + feat + (isHigh ? '<span class="impact-tag">high impact gap</span>' : '') + '</span>' + badgeHTML(v) + '</div>';
+    html += '<div class="feature-row"><span class="feature-name">' + feat + (isHigh ? '<span class="impact-tag">heads up</span>' : '') + '</span>' + badgeHTML(v) + '</div>';
   });
 
   html += '<div class="divider"></div><p class="section-label">Never supported on any network</p>';
@@ -179,9 +179,9 @@ function render(net) {
 
   var gaps = hi.filter(function(f) { var v = matrix[f] ? matrix[f][key] : null; return v === 'no' || v === 'oneway-in' || v === 'oneway-out'; });
   if (gaps.length > 0) {
-    html += '<p class="callout">Features tagged <span class="impact-tag">high impact gap</span> are things users likely expect from ' + net + ' natively but won\'t get through Beeper. These are candidates for the "heads up" section of the onboarding label.</p>';
+    html += '<p class="callout">Features tagged <span class="impact-tag">heads up</span> are things you may be used to on ' + net + ' that aren\'t yet available through Beeper.</p>';
   } else {
-    html += '<p class="callout">' + net + ' has excellent coverage on Beeper \u2014 no major expectation gaps to flag during onboarding.</p>';
+    html += '<p class="callout">' + net + ' has excellent feature coverage on Beeper.</p>';
   }
 
   document.getElementById('labelOutput').innerHTML = html;
